@@ -1,0 +1,24 @@
+body{
+	background-color:#333;
+	font-family:'Open Sans', sans-serif;
+	color:#DDD;
+}
+
+#banner{
+	text-align:center;
+	vertical-align:middle;
+}
+
+#blogo{
+	display:inline-block;
+	width:207px;
+	height:151px;
+	background:url('../img/fox.png') no-repeat;
+	vertical-align:middle;
+}
+
+#btext{
+	font-size:128px;
+	color:#F71;
+	vertical-align:middle;
+}
