@@ -17,6 +17,8 @@ import java.io.IOException;
 public class Main extends HttpServlet {
 	@EJB
 	private AddBeanRemote bean;
+
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 

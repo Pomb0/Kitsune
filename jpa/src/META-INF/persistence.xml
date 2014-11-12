@@ -6,6 +6,11 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:jboss/datasources/kitsune</jta-data-source>
 
+        <class>entity.ArticleEntity</class>
+        <class>entity.AuthorEntity</class>
+        <class>entity.HighlightEntity</class>
+        <class>entity.MediaEntity</class>
+        <class>entity.TopicEntity</class>
         <class>entity.UserEntity</class>
 
         <properties>

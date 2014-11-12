@@ -5,6 +5,7 @@
       <element id="javaee-facet-resources" facet="ejb/ejb/EJB" />
       <element id="module-output" name="ejb" />
       <element id="module-output" name="common" />
+      <element id="module-output" name="jpa" />
     </root>
   </artifact>
 </component>

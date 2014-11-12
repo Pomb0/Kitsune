@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="ear" name="ear:ear">
+  <artifact type="ear" build-on-make="true" name="ear:ear">
     <output-path>$PROJECT_DIR$/out/artifacts/ear_ear</output-path>
     <root id="archive" name="ear_ear.ear">
       <element id="artifact" artifact-name="ear:ear exploded" />
