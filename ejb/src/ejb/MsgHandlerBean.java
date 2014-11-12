@@ -31,7 +31,7 @@ public class MsgHandlerBean implements MessageListener {
 		StreamMessage msg = (StreamMessage)message;
 		try {
 			String xml = msg.readString();
-			System.out.println("FAK OFF MATE: " + xml.substring(0,16) + " : " + xml.substring(64,16));
+			System.out.println("FAK OFF MATE: " + xml.substring(0,16) + " : " + xml.substring(64,80));
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

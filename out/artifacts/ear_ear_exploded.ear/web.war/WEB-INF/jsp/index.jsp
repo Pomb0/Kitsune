@@ -12,6 +12,7 @@
   <ul>
     <li>${isLogged}</li>
     <li>${sessionId}</li>
+    <li>${res}</li>
   </ul>
 
 <jsp:include page="layout/bot.jsp" />

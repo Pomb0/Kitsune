@@ -9,6 +9,9 @@
       <element id="directory" name="web.war">
         <element id="artifact" artifact-name="web:war exploded" />
       </element>
+      <element id="directory" name="lib">
+        <element id="artifact" artifact-name="jpa:jar" />
+      </element>
     </root>
   </artifact>
 </component>

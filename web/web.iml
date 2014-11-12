@@ -20,5 +20,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="JBoss 8.1.0.Final" level="application_server_libraries" />
+    <orderEntry type="module" module-name="common" />
   </component>
 </module>
