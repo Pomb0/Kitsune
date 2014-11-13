@@ -11,8 +11,20 @@ import javax.ejb.Remote;
 
 @Remote
 public interface UserBeanRemote {
-	public boolean register(String username, String password, String mail, String name);
+	public Response register(String username, String password, String mail, String name);
 	public User auth(String username, String password);
 	public User getUser(String username);
 	public User getUser(int id);
+
+	public enum Response{
+		OK(1), DUPLICATE_USER(2), DUPLICATE_MAIL(3), UNKNOWN(4);
+		private int value;
+		private Response(int value) {
+			this.value = value;
+		}
+		public int getValue(){
+			return value;
+		}
+	}
 }
+

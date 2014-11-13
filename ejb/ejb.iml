@@ -22,7 +22,7 @@
     <orderEntry type="module" module-name="common" />
     <orderEntry type="library" name="JPA 2.1-2.1" level="project" />
     <orderEntry type="module" module-name="jpa" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/mail-1.4.jar!/" />

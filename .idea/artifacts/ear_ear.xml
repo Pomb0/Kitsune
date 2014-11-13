@@ -3,6 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/ear_ear</output-path>
     <root id="archive" name="ear_ear.ear">
       <element id="artifact" artifact-name="ear:ear exploded" />
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="javax.servlet.jsp.jstl-api-1.2.1" />
+      </element>
     </root>
   </artifact>
 </component>

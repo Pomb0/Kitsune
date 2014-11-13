@@ -6,7 +6,6 @@ import entity.UserEntity;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -19,17 +18,18 @@ public class UserBean implements UserBeanRemote {
 	EntityManager entityMan;
 
 	@Override
-	public boolean register(String username, String password, String mail, String name) {
-		EntityTransaction eTrans = entityMan.getTransaction();
-		eTrans.begin();
-		UserEntity newUser = new UserEntity();
-		newUser.setUsername(username)
-				.setPassword(password)
-				.setMail(mail)
-				.setName(name);
-		entityMan.persist(newUser);
-		eTrans.commit();
-		return true;
+	public Response register(String username, String password, String mail, String name) {
+		try {
+			UserEntity newUser = new UserEntity();
+			newUser.setUsername(username)
+					.setPassword(password)
+					.setMail(mail)
+					.setName(name);
+			entityMan.persist(newUser);
+		}catch (Exception e){
+			return Response.DUPLICATE_USER;
+		}
+		return Response.OK;
 	}
 
 	@Override
