@@ -10,8 +10,8 @@
 <jsp:include page="layout/top.jsp" />
 <div id="basicForm">
   <form name="login" method="post" action="login">
-    <p><input name="username" type="text" placeholder="Username" autocomplete="off"/></p>
-    <p><input name="password" type="password" placeholder="Password" autocomplete="off"/></p>
+    <p><input name="username" type="text" placeholder="Username" autocomplete="off" required="required" /></p>
+    <p><input name="password" type="password" placeholder="Password" autocomplete="off" required="required" /></p>
     <p>
       <input name="submit" class="button" type="submit" value="Sign In" />
       <a class="linkBtn" href="register">Register</a>

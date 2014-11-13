@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * User: Jaime
@@ -16,12 +17,19 @@ public class TopicEntity implements Serializable{
 	@Column(nullable = false, unique = true)
 	private String name;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
+	private Set<ArticleEntity> articles;
+
 	public int getId() {
 		return id;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public Set<ArticleEntity> getArticles() {
+		return articles;
 	}
 
 	public TopicEntity setId(final int id) {
@@ -31,6 +39,11 @@ public class TopicEntity implements Serializable{
 
 	public TopicEntity setName(final String name) {
 		this.name = name;
+		return this;
+	}
+
+	public TopicEntity setArticles(final Set<ArticleEntity> articles) {
+		this.articles = articles;
 		return this;
 	}
 

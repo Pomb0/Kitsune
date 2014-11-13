@@ -20,6 +20,16 @@
         <img src="http://i2.cdn.turner.com/cnn/dam/assets/140917002315-pkg-goodman-spain-catalonia-independence-00001513-story-top.jpg" />
       </div>
     </li>
+
+    <li class="articleIcon">
+      <div class="atitle">"Help! A fake version of my restaurant opened in China."</div>
+      <div class="adate">2014-10-16 04:35:00</div>
+      <div class="atopic">Asia</div>
+      <div class="aimage">
+        <img src="http://i2.cdn.turner.com/cnn/dam/assets/141014155431-chachawan-interior-story-top.jpg" />
+      </div>
+    </li>
+
   </ul>
 </div>
 

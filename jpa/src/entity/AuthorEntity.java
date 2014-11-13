@@ -18,7 +18,7 @@ public class AuthorEntity implements Serializable{
 	@Column(nullable = false, unique = true)
 	private String name;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
 	private Set<ArticleEntity> articles;
 
 	public int getId() {
@@ -29,6 +29,10 @@ public class AuthorEntity implements Serializable{
 		return name;
 	}
 
+	public Set<ArticleEntity> getArticles() {
+		return articles;
+	}
+
 	public AuthorEntity setId(final int id) {
 		this.id = id;
 		return this;
@@ -36,6 +40,11 @@ public class AuthorEntity implements Serializable{
 
 	public AuthorEntity setName(final String name) {
 		this.name = name;
+		return this;
+	}
+
+	public AuthorEntity setArticles(final Set<ArticleEntity> articles) {
+		this.articles = articles;
 		return this;
 	}
 

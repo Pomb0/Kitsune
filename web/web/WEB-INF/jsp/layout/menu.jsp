@@ -8,9 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div id="nav">
   <ul>
-    <li><a href="">Home</a></li>
+    <li><a href="home">Home</a></li>
     <li><a href="">Profile</a></li>
     <li><a href="">Search</a></li>
-    <li><a href="login">SignOut</a></li>
+    <li><a href="logout">SignOut</a></li>
   </ul>
 </div>

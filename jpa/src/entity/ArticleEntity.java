@@ -20,11 +20,17 @@ public class ArticleEntity implements Serializable {
 	@ManyToOne
 	private TopicEntity topic;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<AuthorEntity> authors;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	private Set<HighlightEntity> highlights;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	private Set<MediaEntity> media;
 
 	@Column(columnDefinition = "text")
 	private String body;
@@ -60,6 +66,14 @@ public class ArticleEntity implements Serializable {
 		return body;
 	}
 
+	public Set<HighlightEntity> getHighlights() {
+		return highlights;
+	}
+
+	public Set<MediaEntity> getMedia() {
+		return media;
+	}
+
 	public ArticleEntity setId(final int id) {
 		this.id = id;
 		return this;
@@ -92,6 +106,16 @@ public class ArticleEntity implements Serializable {
 
 	public ArticleEntity setBody(final String body) {
 		this.body = body;
+		return this;
+	}
+
+	public ArticleEntity setMedia(final Set<MediaEntity> media) {
+		this.media = media;
+		return this;
+	}
+
+	public ArticleEntity setHighlights(final Set<HighlightEntity> highlights) {
+		this.highlights = highlights;
 		return this;
 	}
 

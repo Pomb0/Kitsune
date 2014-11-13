@@ -11,6 +11,7 @@ public class User implements Serializable{
 	private boolean admin;
 	private String mail;
 	private String username;
+	private String password;
 	private String name;
 
 	public User() {
@@ -36,6 +37,16 @@ public class User implements Serializable{
 		return id;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public User setPassword(final String password) {
+		this.password = password;
+		return this;
+	}
+
+
 	public User setId(final int id) {
 		this.id = id;
 		return this;
@@ -59,6 +70,16 @@ public class User implements Serializable{
 	public User setName(final String name) {
 		this.name = name;
 		return this;
+	}
+
+	@Override
+	public String toString(){
+		return ">>" + username +
+				"\n  Iden: " + id +
+				"\n  Pass: " + password +
+				"\n  Mail: " + mail +
+				"\n  Name: " + name +
+				"\n  isAd: " + admin;
 	}
 
 

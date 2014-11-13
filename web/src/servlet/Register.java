@@ -25,17 +25,27 @@ public class Register extends KitsuneServlet {
 		String passveri = request.getParameter("passveri");
 		String mail = request.getParameter("mail");
 
+		if(!password.equals(passveri)) addError("The passwords do not match.");
+
 		if(name!=null && username!=null && password!=null && passveri!=null && mail!=null && password.equals(passveri)){
 			UserBeanRemote.Response outcome = userBeanRemote.register(username, password, mail, name);
 			switch (outcome){
 				case DUPLICATE_USER:
-					addNotification("The username " + username + " is already taken.");
+					addError("The username " + username + " is already taken.");
 					break;
+				case DUPLICATE_MAIL:
+					addError("The mail " + mail + " is already taken.");
+					break;
+				case UNKNOWN:
+					addError("An error occurred, try again, possibly with a different username and or mail.");
+					break;
+				case OK:
+					addAchievement("Account created with success.");
+					response.sendRedirect("login");
+					return;
 			}
 		}
-		if(hasNotifications()) {
-			request.setAttribute("notifications", getNotifications());
-		}
+		showNotifications();
 		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/jsp/register.jsp");
 		rd.forward(request, response);
 	}

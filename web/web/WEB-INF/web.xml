@@ -14,12 +14,12 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>Main</servlet-name>
-        <servlet-class>servlet.Main</servlet-class>
+        <servlet-name>home</servlet-name>
+        <servlet-class>servlet.Home</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Main</servlet-name>
-        <url-pattern>/main</url-pattern>
+        <servlet-name>home</servlet-name>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -32,6 +32,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>servlet.Logout</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Register</servlet-name>
         <servlet-class>servlet.Register</servlet-class>
     </servlet>
@@ -41,6 +50,6 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>main</welcome-file>
+        <welcome-file>home</welcome-file>
     </welcome-file-list>
 </web-app>
