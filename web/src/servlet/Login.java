@@ -36,6 +36,7 @@ public class Login extends KitsuneServlet {
 
 	protected void kGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		showNotifications();
+		request.getSession().setAttribute("SESSid", request.getSession().getId());
 		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/jsp/login.jsp");
 		rd.forward(request, response);
 	}
