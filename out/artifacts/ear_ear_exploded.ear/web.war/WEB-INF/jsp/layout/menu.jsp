@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div id="menuspace">
   <div id="menu">
@@ -17,6 +18,9 @@
       <ul class="button_list">
         <a href="home"><li>Home</li></a>
         <a href="profile?id=${user.id}"><li>Profile</li></a>
+        <c:if test="${user.admin}">
+        <a href="users"><li>Users</li></a>
+        </c:if>
         <a href=""><li>Search</li></a>
         <a href="logout"><li>SignOut</li></a>
       </ul>

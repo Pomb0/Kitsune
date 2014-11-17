@@ -4,6 +4,7 @@ import bean.Article;
 import bean.Topic;
 
 import javax.ejb.Remote;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,5 +16,38 @@ public interface NewsBeanRemote {
 	public Article getArticle(int id);
 	public List<Topic> getTopics();
 	public void addArticle(Article article);
-	public List<Article> getArticlesPage(int topicId, int page, int perPage);
+	public PaginatedList getArticlesPage(int topicId, int page, int perPage);
+
+	class PaginatedList implements Serializable{
+		private long total;
+		private List page;
+
+		public PaginatedList() {
+		}
+
+		public PaginatedList(int total, List<Object> page) {
+			this.total = total;
+			this.page = page;
+		}
+
+		public List getPage() {
+			return page;
+		}
+
+		public long getTotal() {
+			return total;
+		}
+
+		public PaginatedList setTotal(final long total) {
+			this.total = total;
+			return this;
+		}
+
+		public PaginatedList setPage(final List page) {
+			this.page = page;
+			return this;
+		}
+
+
+	}
 }

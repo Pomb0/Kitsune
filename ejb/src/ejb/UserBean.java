@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,6 +75,7 @@ public class UserBean implements UserBeanRemote {
 					.setAdmin(user.isAdmin());
 			//Optional password update.
 			if(user.getPassword() != null) userEntity.setPassword(user.getPassword());
+			entityMan.flush();
 		}catch (Exception e){
 			while(e.getCause()!=null) e = (Exception) e.getCause();
 			boolean buser = e.getMessage().contains("'" + user.getUsername() + "'");
@@ -85,6 +87,24 @@ public class UserBean implements UserBeanRemote {
 		return Response.OK;
 	}
 
+	@Override
+	public List<User> getUserList() {
+		List<User> list = new LinkedList<>();
+
+		Query query = entityMan.createQuery("SELECT u FROM UserEntity u ORDER BY u.username");
+		List<UserEntity> userEntityList = (List<UserEntity>)query.getResultList();
+
+		for(UserEntity u : userEntityList){
+			list.add(new User()
+				.setId(u.getId())
+				.setUsername(u.getUsername())
+			);
+		}
+
+		return list;
+	}
+
+
 	private User userEntity2Bean(UserEntity userEntity){
 		if(userEntity==null) return null;
 		return new User()
@@ -95,5 +115,6 @@ public class UserBean implements UserBeanRemote {
 				.setName(userEntity.getName())
 				.setAdmin(userEntity.isAdmin());
 	}
+
 
 }

@@ -33,11 +33,7 @@ public class Profile extends KitsuneServlet {
 		String password = request.getParameter("password");
 		String passveri = request.getParameter("passveri");
 		String mail = request.getParameter("mail");
-		System.out.println("Form: " + request.getParameter("isAdmin"));
 		boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
-		System.out.println("Valu: " + isAdmin);
-
-
 
 		if(id!=null && name!=null && username!=null && mail!=null) {
 			try {

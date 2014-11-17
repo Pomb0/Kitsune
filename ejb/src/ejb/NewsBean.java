@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.*;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +63,17 @@ public class NewsBean implements NewsBeanRemote {
 
 	@Override
 	public List<Topic> getTopics() {
-		return null;
+		List<Topic> topics = new LinkedList<>();
+		Query query = entityMan.createQuery("SELECT t FROM TopicEntity t ORDER BY t.name ASC");
+		List<TopicEntity> topicEntityList = query.getResultList();
+		if(topicEntityList==null || topicEntityList.isEmpty()) return null;
+		topics.add(new Topic(-1, "All"));
+		for(TopicEntity t : topicEntityList){
+			String[] tmpList =  t.getName().split(" ");
+			for(int i=0; i<tmpList.length; i++) tmpList[i] = tmpList[i].substring(0,1).toUpperCase().concat(tmpList[i].substring(1));
+			topics.add(new Topic(t.getId(), String.join("", tmpList) ));
+		}
+		return topics;
 	}
 
 	@Override
@@ -159,18 +170,52 @@ public class NewsBean implements NewsBeanRemote {
 		return article;
 	}
 
-	@Override
-	public List<Article> getArticlesPage(int topicId, int pageNumber, int pageSize) {
-		List<Article> list = new LinkedList<>();
-		Query query = entityMan.createQuery("Select a from ArticleEntity a");
 
-		query.setFirstResult((pageNumber-1) * pageSize);
+
+	@Override
+	public PaginatedList getArticlesPage(int topicId, int pageNumber, int pageSize) {
+		PaginatedList plist = new PaginatedList();
+		List<Article> list = new LinkedList<>();
+		CriteriaBuilder criteriaBuilder = entityMan.getCriteriaBuilder();
+
+		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+		CriteriaQuery<ArticleEntity> cquery = criteriaBuilder.createQuery(ArticleEntity.class);
+
+
+
+		Root<ArticleEntity> c = cquery.from(ArticleEntity.class);
+
+		ParameterExpression<Integer> critId = criteriaBuilder.parameter(Integer.class);
+		Expression where = criteriaBuilder.equal(c.get("topic").get("id"), critId);
+
+		countQuery.select(criteriaBuilder.count(countQuery.from(ArticleEntity.class)));
+
+		if(topicId!=-1){
+			cquery.where(where);
+			countQuery.where(where);
+		}
+
+
+		cquery.orderBy(criteriaBuilder.desc(c.get("date")));
+		Query query = entityMan.createQuery(cquery);
+		Query countQ = entityMan.createQuery(countQuery);
+
+		if(topicId!=-1){
+			query.setParameter(critId, topicId);
+			countQ.setParameter(critId, topicId);
+		}
+		query.setFirstResult((pageNumber - 1) * pageSize);
 		query.setMaxResults(pageSize);
+
+		Long total = (Long) countQ.getSingleResult();
 		List <ArticleEntity> articleEntities = (List <ArticleEntity>)query.getResultList();
 
 		for(ArticleEntity articleEntity : articleEntities) list.add(articleEntityToBean(articleEntity));
 
-		return list;
+		plist
+				.setPage(list)
+				.setTotal(total);
+		return plist;
 	}
 
 	private TopicEntity retrieveTopic (String topic) {

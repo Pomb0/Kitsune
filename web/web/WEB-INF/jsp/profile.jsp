@@ -12,13 +12,14 @@
 <jsp:include page="layout/menu.jsp" />
 <h1>Profile:</h1>
 <div class="center">
-  <ul>
-    <li><b>Id:</b> ${puser.id}</li>
-    <li><b>Username:</b> ${puser.username}</li>
-    <li><b>Mail:</b> ${puser.mail}</li>
-    <li><b>Name:</b> ${puser.name}</li>
-    <li><b>IsAdmin:</b> ${puser.admin}</li>
-  </ul>
+  <span class="inline left">
+    <ul>
+      <li><b>Username:</b> ${puser.username}</li>
+      <li><b>Mail:</b> ${puser.mail}</li>
+      <li><b>Name:</b> ${puser.name}</li>
+      <li><b>IsAdmin:</b> ${puser.admin}</li>
+    </ul>
+  </span>
 </div>
 
 <c:if test="${user.admin}">
