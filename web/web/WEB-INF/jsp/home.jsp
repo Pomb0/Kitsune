@@ -33,11 +33,5 @@
   </ul>
 </div>
 
-<!--<h2>${msg}</h2>
-  <ul>
-    <li>${isLogged}</li>
-    <li>${sessionId}</li>
-    <li>${res}</li>
-  </ul>-->
 
 <jsp:include page="layout/bot.jsp" />

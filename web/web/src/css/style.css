@@ -123,6 +123,16 @@ div#nav ul li{
 }
 
 
+a{
+	color:#ccc;
+	text-shadow:1px 1px 1px #111;
+}
+
+a:hover{
+	color:#F60;
+	text-shadow:1px 1px 1px #111;
+}
+
 
 
 div#nav ul li a{
@@ -244,3 +254,148 @@ div#nav ul li a:active{
 	font-size:large;
 	text-shadow:1px 1px 1px #111;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.button_list{
+	position:relative;
+	margin:0px 0px 0px 0px;
+	padding:0;
+	text-indent:0;
+	list-style:none;
+	outline:none;
+}
+
+.button_list li, .button_list a li, .btn{
+	color:#DDD;
+	position:relative;
+	background:#222;
+	margin:8px;
+	padding:8px;
+	-moz-border-radius:8px;
+	border-radius:8px;
+	cursor:pointer;
+
+	-o-transition:color .2s, background-color .2s;
+	-ms-transition:color .2s, background-color .2s;
+	-moz-transition:color .2s, background-color .2s;
+	-webkit-transition:color .2s, background-color .2s;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.button_list li:hover,.button_list a li:hover, .btn:hover{
+	background:#666;
+}
+
+.button_list li:active,.button_list a li:active, .btn:active{
+	background:#666;
+	left:1px;
+	top:1px;
+	color:#ccc;
+	text-shadow:#000 -1px -1px 1px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#sidebar{
+	position:fixed;
+	width:216px;
+	height:100%;
+	right:-239px;
+	top:0px;
+	background:#333;
+	padding-top:24px;
+	padding-left:12px;
+	padding-right:12px;
+
+	color:#EEE;
+
+	border-left:8px solid #111;
+
+	-o-transition:right .5s;
+	-ms-transition:right .5s;
+	-moz-transition:right .5s;
+	-webkit-transition:right .5s;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#menu:hover #sidebar, #sidebar:hover{
+	right:0px;
+}
+
+.center{
+	text-align:center;
+}
+
+.left{
+	text-align:left;
+}
+
+
+.right{
+	text-align:right;
+}
+
+
+#menuspace{
+	display:table-cell;
+	padding-right:24px;
+	padding-top:24px;
+	text-align:right;
+	vertical-align:top;
+
+}
+
+#menu{
+	display:inline-block;
+	vertical-align:top;
+	height:32px;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+

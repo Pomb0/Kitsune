@@ -1,5 +1,9 @@
 package servlet;
 
+import bean.User;
+import ejbInterface.UserBeanRemote;
+
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,12 +22,17 @@ public abstract class KitsuneServlet extends HttpServlet {
 	private HttpSession session;
 	private HttpServletResponse response;
 	private HttpServletRequest request;
-	private Integer userID;
+	private User user;
+	@EJB
+	private UserBeanRemote userBean;
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.session = req.getSession();
 		this.request = req;
 		this.response = resp;
+		noCache();
+		if(isLogged()) session.setAttribute("user", getUser());
 		kPost(req, resp);
 	}
 
@@ -32,6 +41,8 @@ public abstract class KitsuneServlet extends HttpServlet {
 		this.session = req.getSession();
 		this.request = req;
 		this.response = resp;
+		noCache();
+		if(isLogged()) session.setAttribute("user", getUser());
 		kGet(req, resp);
 	}
 
@@ -45,7 +56,6 @@ public abstract class KitsuneServlet extends HttpServlet {
 
 	protected void logIn(int id){
 		session.setAttribute("userID", id);
-		userID = id;
 	}
 
 	protected void logOut(){
@@ -104,5 +114,20 @@ public abstract class KitsuneServlet extends HttpServlet {
 		LinkedList<String> queue = getNotificationQueue();
 		session.removeAttribute("notificationQueue");
 		return queue;
+	}
+
+	protected void noCache(){
+		response.setHeader("Cache-Control", "no-cache, no-store");
+		response.setHeader("Pragma", "no-cache");
+	}
+
+	protected User getUser(){
+		if(user==null){
+			int userID = getUserId();
+			if(userID==-1) user = null;
+			user =  userBean.getUser(userID);
+		}
+		if(user==null) logOut();
+		return user;
 	}
 }

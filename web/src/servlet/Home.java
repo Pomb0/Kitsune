@@ -1,6 +1,6 @@
 package servlet;
 
-import ejbInterface.AddBeanRemote;
+import ejbInterface.NewsBeanRemote;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -15,9 +15,7 @@ import java.io.IOException;
  */
 public class Home extends KitsuneServlet {
 	@EJB
-	private AddBeanRemote bean;
-
-
+	private NewsBeanRemote news;
 
 	protected void kPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
@@ -27,8 +25,6 @@ public class Home extends KitsuneServlet {
 			response.sendRedirect("login");
 			return;
 		}
-		request.setAttribute("res", bean.add(25, 5));
-		request.setAttribute("msg", "hi there person.");
 
 		showNotifications();
 		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/jsp/home.jsp");
