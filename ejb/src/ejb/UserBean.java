@@ -58,9 +58,31 @@ public class UserBean implements UserBeanRemote {
 
 	@Override
 	public User getUser(int id) {
+
 		UserEntity user = entityMan.find(UserEntity.class, id);
 		if(user==null) return null;
 		return userEntity2Bean(user);
+	}
+
+	@Override
+	public Response updateUser(User user) {
+		try {
+			UserEntity userEntity = entityMan.find(UserEntity.class, user.getId());
+			userEntity.setUsername(user.getUsername())
+					.setMail(user.getMail())
+					.setName(user.getName())
+					.setAdmin(user.isAdmin());
+			//Optional password update.
+			if(user.getPassword() != null) userEntity.setPassword(user.getPassword());
+		}catch (Exception e){
+			while(e.getCause()!=null) e = (Exception) e.getCause();
+			boolean buser = e.getMessage().contains("'" + user.getUsername() + "'");
+			boolean bmail = e.getMessage().contains("'" + user.getMail() + "'");
+			if(buser && !bmail) return Response.DUPLICATE_USER;
+			if(bmail && !buser) return Response.DUPLICATE_MAIL;
+			return Response.UNKNOWN;
+		}
+		return Response.OK;
 	}
 
 	private User userEntity2Bean(UserEntity userEntity){

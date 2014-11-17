@@ -18,5 +18,4 @@
     </p>
   </form>
 </div>
-<h1>${SESSid}</h1>
 <jsp:include page="layout/bot.jsp" />

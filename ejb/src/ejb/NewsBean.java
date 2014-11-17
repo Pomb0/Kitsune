@@ -6,12 +6,11 @@ import bean.Topic;
 import ejbInterface.NewsBeanRemote;
 import entity.*;
 
-import javax.annotation.Resource;
-import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +25,6 @@ import java.util.Set;
 public class NewsBean implements NewsBeanRemote {
 	@PersistenceContext(name="jpaUnit")
 	EntityManager entityMan;
-	@Resource
-	EJBContext ejbContext;
 
 	@Override
 	public Article getArticle(int id) {
@@ -82,6 +79,7 @@ public class NewsBean implements NewsBeanRemote {
 
 		try {
 			// Topics
+
 			TopicEntity topicEntity = retrieveTopic(article.getTopic());
 			if (topicEntity == null) {
 				topicEntity = new TopicEntity();
@@ -134,14 +132,45 @@ public class NewsBean implements NewsBeanRemote {
 					entityMan.persist(mediaEntity);
 				}
 			}
-
 			entityMan.persist(articleEntity);
 		} catch(Exception e ) {
 			System.out.println("#>Ignoring duplicated article.");
-			ejbContext.setRollbackOnly();
-			return;
 		}
 
+	}
+
+	private Article articleEntityToBean(ArticleEntity entity){
+		Article article = new Article();
+		String img = null;
+		if(entity.getMedia()!=null){
+			for(MediaEntity m : entity.getMedia()){
+				if(m.isImage()){
+					img = m.getUrl();
+					break;
+				}
+			}
+		}
+		article
+				.setId(entity.getId())
+				.setTitle(entity.getTitle())
+				.setTopic(entity.getTopic().getName())
+				.setDate(entity.getDate())
+				.setThumb(img);
+		return article;
+	}
+
+	@Override
+	public List<Article> getArticlesPage(int topicId, int pageNumber, int pageSize) {
+		List<Article> list = new LinkedList<>();
+		Query query = entityMan.createQuery("Select a from ArticleEntity a");
+
+		query.setFirstResult((pageNumber-1) * pageSize);
+		query.setMaxResults(pageSize);
+		List <ArticleEntity> articleEntities = (List <ArticleEntity>)query.getResultList();
+
+		for(ArticleEntity articleEntity : articleEntities) list.add(articleEntityToBean(articleEntity));
+
+		return list;
 	}
 
 	private TopicEntity retrieveTopic (String topic) {
@@ -156,4 +185,5 @@ public class NewsBean implements NewsBeanRemote {
 		} catch (NoResultException e ) { return null; }
 
 	}
+
 }

@@ -3,6 +3,7 @@ package servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -15,7 +16,8 @@ public class Logout extends KitsuneServlet {
 	}
 
 	protected void kGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(isLogged()) logOut();
+		HttpSession session = request.getSession();
+		if(isLogged(session)) logOut(session);
 		response.sendRedirect("login");
 	}
 }

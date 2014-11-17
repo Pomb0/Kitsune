@@ -19,64 +19,55 @@ import java.util.List;
  */
 
 public abstract class KitsuneServlet extends HttpServlet {
-	private HttpSession session;
-	private HttpServletResponse response;
-	private HttpServletRequest request;
-	private User user;
 	@EJB
 	private UserBeanRemote userBean;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.session = req.getSession();
-		this.request = req;
-		this.response = resp;
-		noCache();
-		if(isLogged()) session.setAttribute("user", getUser());
+		HttpSession session = req.getSession();
+		noCache(resp);
+		if(isLogged(session)) req.getSession().setAttribute("user", getUser(session));
 		kPost(req, resp);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.session = req.getSession();
-		this.request = req;
-		this.response = resp;
-		noCache();
-		if(isLogged()) session.setAttribute("user", getUser());
+		HttpSession session = req.getSession();
+		noCache(resp);
+		if(isLogged(session)) req.getSession().setAttribute("user", getUser(session));
 		kGet(req, resp);
 	}
 
 	protected abstract void kPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 	protected abstract void kGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 
-	protected boolean isLogged(){
-		if(session.getAttribute("userID")!=null) return true;
-		return false;
+	protected boolean isLogged(HttpSession session){
+		return session.getAttribute("userID") != null;
 	}
 
-	protected void logIn(int id){
+	protected void logIn(HttpSession session, int id){
 		session.setAttribute("userID", id);
 	}
 
-	protected void logOut(){
+	protected void logOut(HttpSession session){
 		session.removeAttribute("userID");
 	}
 
-	protected int getUserId(){
+	protected int getUserId(HttpSession session){
 		Integer id = (Integer) session.getAttribute("userID");
 		return (id!=null)?(int)id:-1;
 	}
 
-	protected void showNotifications(){
-		if(hasNotifications()) {
+	protected void showNotifications(HttpServletRequest request){
+		if(hasNotifications(request.getSession())) {
 			List<String> prev = (List<String>) request.getAttribute("notifications");
-			List<String> novas = getNotifications();
+			List<String> novas = getNotifications(request.getSession());
 			if(prev!=null) novas.addAll(prev);
 			request.setAttribute("notifications", novas);
 		}
 	}
 
-	private LinkedList<String> getNotificationQueue(){
+	private LinkedList<String> getNotificationQueue(HttpSession session){
 		LinkedList<String> queue = (LinkedList<String>) session.getAttribute("notificationQueue");
 		if( queue == null){
 			queue = new LinkedList<String>();
@@ -85,49 +76,48 @@ public abstract class KitsuneServlet extends HttpServlet {
 		return queue;
 	}
 
-	protected void addError(String msg){
+	protected void addError(HttpSession session, String msg){
 		msg = "<span class=\"red\">" + msg + "</span>";
-		addEntry(msg);
+		addEntry(session, msg);
 	}
 
-	protected void addAchievement(String msg){
+	protected void addAchievement(HttpSession session, String msg){
 		msg = "<span class=\"green\">" + msg + "</span>";
-		addEntry(msg);
+		addEntry(session, msg);
 	}
 
-	protected void addNotification(String msg){
+	protected void addNotification(HttpSession session, String msg){
 		msg = "<span class=\"platinum\">" + msg + "</span>";
-		addEntry(msg);
+		addEntry(session, msg);
 	}
 
-	private void addEntry(String msg){
-		LinkedList<String> queue = getNotificationQueue();
+	private void addEntry(HttpSession session, String msg){
+		LinkedList<String> queue = getNotificationQueue(session);
 		queue.add(msg);
 	}
 
-	protected boolean hasNotifications(){
-		LinkedList<String> queue = getNotificationQueue();
+	protected boolean hasNotifications(HttpSession session){
+		LinkedList<String> queue = getNotificationQueue(session);
 		return !queue.isEmpty();
 	}
 
-	protected List<String> getNotifications(){
-		LinkedList<String> queue = getNotificationQueue();
+	protected List<String> getNotifications(HttpSession session){
+		LinkedList<String> queue = getNotificationQueue(session);
 		session.removeAttribute("notificationQueue");
 		return queue;
 	}
 
-	protected void noCache(){
+	protected void noCache(HttpServletResponse response){
 		response.setHeader("Cache-Control", "no-cache, no-store");
 		response.setHeader("Pragma", "no-cache");
 	}
 
-	protected User getUser(){
-		if(user==null){
-			int userID = getUserId();
-			if(userID==-1) user = null;
-			user =  userBean.getUser(userID);
-		}
-		if(user==null) logOut();
+	protected User getUser(HttpSession session){
+		User user;
+		int userID = getUserId(session);
+		if(userID==-1) user = null;
+		user =  userBean.getUser(userID);
+		if(user==null) logOut(session);
 		return user;
 	}
 }

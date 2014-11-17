@@ -43,8 +43,11 @@ public class MsgHandlerBean implements MessageListener {
 		try {
 			String xml = msg.readString();
 			articles = parser.parse(xml);
-			//news.addArticle(articles.iterator().next());
-			System.out.println(articles.iterator().next().getTitle());
+
+			for(Article pickl : articles){
+				news.addArticle(pickl);
+			}
+
 		} catch (JMSException e) {
 			System.out.println("#>Error reading JMS message.");
 		}

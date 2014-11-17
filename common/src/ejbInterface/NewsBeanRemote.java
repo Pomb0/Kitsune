@@ -15,4 +15,5 @@ public interface NewsBeanRemote {
 	public Article getArticle(int id);
 	public List<Topic> getTopics();
 	public void addArticle(Article article);
+	public List<Article> getArticlesPage(int topicId, int page, int perPage);
 }

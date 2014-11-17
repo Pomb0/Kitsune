@@ -15,6 +15,7 @@ public class Article implements Serializable{
 	private Date date;
 	private String body;
 	private String topic;
+	private String thumb;
 	private List<String> highlights;
 	private List<Author> authors;
 	private List<String> images;
@@ -85,6 +86,10 @@ public class Article implements Serializable{
 		return images;
 	}
 
+	public String getThumb() {
+		return thumb;
+	}
+
 	public Article setId(final int id) {
 		this.id = id;
 		return this;
@@ -135,5 +140,10 @@ public class Article implements Serializable{
 		return this;
 	}
 
+	public Article setThumb(final String thumb) {
+		this.thumb = thumb;
+		return this;
+	}
 
- }
+
+}
