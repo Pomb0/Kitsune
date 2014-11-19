@@ -76,6 +76,15 @@
         <url-pattern>/article</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Author</servlet-name>
+        <servlet-class>servlet.Author</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Author</servlet-name>
+        <url-pattern>/author</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>home</welcome-file>
     </welcome-file-list>

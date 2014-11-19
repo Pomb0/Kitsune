@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Jaime
-  Date: 17/11/2014
-  Time: 19:02
+  Date: 18/11/2014
+  Time: 14:23
   To change this template use File | Settings | File Templates.
 --%>
 
@@ -15,10 +15,10 @@
 
 <div id="news">
   <ul>
-    <c:forEach items="${userList}" var="item">
-      <a href="profile?id=${item.id}">
+    <c:forEach items="${authorList}" var="item">
+      <a href="author?id=${item.id}">
         <li class="articleIcon userIcon">
-          <div class="atitle">${item.username}</div>
+          <div class="atitle">${item.name}</div>
         </li>
       </a>
     </c:forEach>

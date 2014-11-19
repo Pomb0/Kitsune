@@ -42,6 +42,10 @@
       </p>
 
     </form>
+    <form class="inline" name="delete" method="post" action="profile">
+      <input type="hidden" name="deleteId" value="${puser.id}" />
+      <input name="submit" class="button" type="submit" value="Delete" />
+    </form>
   </div>
 </c:if>
 

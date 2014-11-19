@@ -81,7 +81,7 @@ public class XmlParser {
 				LinkedList<Author> author = new LinkedList<>();
 				for (k = 0; k < nlist.getLength(); k++) {
 					if (nlist.item(k).getNodeName().equals("value")) {
-						author.add(new Author(0,nlist.item(k).getTextContent()));
+						author.add(new Author(0,nlist.item(k).getTextContent().replaceAll(",", " ").trim()));
 					}
 				}
 				temp.setAuthors(author);

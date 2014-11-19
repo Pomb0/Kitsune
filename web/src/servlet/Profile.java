@@ -33,9 +33,10 @@ public class Profile extends KitsuneServlet {
 		String password = request.getParameter("password");
 		String passveri = request.getParameter("passveri");
 		String mail = request.getParameter("mail");
+		String delete = request.getParameter("deleteId");
 		boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
 
-		if(id!=null && name!=null && username!=null && mail!=null) {
+		if(delete == null && id!=null && name!=null && username!=null && mail!=null ) {
 			try {
 				idVal = Integer.parseInt(id);
 				User user = new User()
@@ -72,6 +73,14 @@ public class Profile extends KitsuneServlet {
 				}
 			}catch (NumberFormatException ne){
 				addError(session, "Could not edit account.");
+			}
+		}else if(delete != null){
+			try {
+				int delId = Integer.parseInt(delete);
+				userBean.removeUser(delId);
+				addAchievement(session, "User removed.");
+			}catch (NumberFormatException ne){
+				addError(session, "Error deleting account.");
 			}
 		}
 		response.sendRedirect("profile?id=" + idVal);

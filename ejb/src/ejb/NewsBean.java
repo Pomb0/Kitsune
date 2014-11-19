@@ -5,17 +5,15 @@ import bean.Author;
 import bean.Topic;
 import ejbInterface.NewsBeanRemote;
 import entity.*;
+import org.omg.CORBA.SystemException;
 
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: Jaime
@@ -23,6 +21,7 @@ import java.util.Set;
  */
 
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class NewsBean implements NewsBeanRemote {
 	@PersistenceContext(name="jpaUnit")
 	EntityManager entityMan;
@@ -44,7 +43,6 @@ public class NewsBean implements NewsBeanRemote {
 			if(item.isImage()) images.add(item.getUrl());
 			else videos.add(item.getUrl());
 		}
-
 
 		article
 				.setId(articleEntity.getId())
@@ -77,19 +75,16 @@ public class NewsBean implements NewsBeanRemote {
 	}
 
 	@Override
-	public void addArticle(Article article){
-		ArticleEntity articleEntity = new ArticleEntity();
-
-		//EntityTransaction tx = entityMan.getTransaction();
-
-		articleEntity.setUrl(article.getUrl());
-		if(article.getTitle() != null) articleEntity.setTitle(article.getTitle());
-		if(article.getDate() != null) articleEntity.setDate(article.getDate());
-		if(article.getBody() != null) articleEntity.setBody(article.getBody());
-
-
+	@TransactionAttribute(value=TransactionAttributeType.REQUIRES_NEW)
+	public void addArticle(Article article) throws SystemException {
+		ArticleEntity articleEntity;
+		articleEntity = new ArticleEntity();
 		try {
-			// Topics
+
+			articleEntity.setUrl(article.getUrl());
+			if (article.getTitle() != null) articleEntity.setTitle(article.getTitle());
+			if (article.getDate() != null) articleEntity.setDate(article.getDate());
+			if (article.getBody() != null) articleEntity.setBody(article.getBody());
 
 			TopicEntity topicEntity = retrieveTopic(article.getTopic());
 			if (topicEntity == null) {
@@ -100,7 +95,7 @@ public class NewsBean implements NewsBeanRemote {
 			articleEntity.setTopic(topicEntity);
 
 			// Authors
-			if(article.getAuthors() != null) {
+			if (article.getAuthors() != null) {
 				Set<AuthorEntity> authorList = new HashSet<>();
 				for (Author at : article.getAuthors()) {
 					AuthorEntity authorEntity = retrieveAuthor(at.getName());
@@ -115,7 +110,7 @@ public class NewsBean implements NewsBeanRemote {
 			}
 
 			// Highlights
-			if(article.getHighlights() != null) {
+			if (article.getHighlights() != null) {
 				for (String hg : article.getHighlights()) {
 					HighlightEntity highlightEntity = new HighlightEntity();
 					highlightEntity.setText(hg);
@@ -125,7 +120,7 @@ public class NewsBean implements NewsBeanRemote {
 			}
 
 			// Images
-			if(article.getImages() != null) {
+			if (article.getImages() != null) {
 				for (String im : article.getImages()) {
 					MediaEntity mediaEntity = new MediaEntity();
 					mediaEntity.setUrl(im).setImage(true);
@@ -135,7 +130,7 @@ public class NewsBean implements NewsBeanRemote {
 			}
 
 			// Videos
-			if(article.getVideos() != null) {
+			if (article.getVideos() != null) {
 				for (String vd : article.getVideos()) {
 					MediaEntity mediaEntity = new MediaEntity();
 					mediaEntity.setUrl(vd).setImage(false);
@@ -144,10 +139,9 @@ public class NewsBean implements NewsBeanRemote {
 				}
 			}
 			entityMan.persist(articleEntity);
-		} catch(Exception e ) {
+		} catch (Exception e) {
 			System.out.println("#>Ignoring duplicated article.");
 		}
-
 	}
 
 	private Article articleEntityToBean(ArticleEntity entity){
@@ -170,8 +164,6 @@ public class NewsBean implements NewsBeanRemote {
 		return article;
 	}
 
-
-
 	@Override
 	public PaginatedList getArticlesPage(int topicId, int pageNumber, int pageSize) {
 		PaginatedList plist = new PaginatedList();
@@ -180,8 +172,6 @@ public class NewsBean implements NewsBeanRemote {
 
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
 		CriteriaQuery<ArticleEntity> cquery = criteriaBuilder.createQuery(ArticleEntity.class);
-
-
 
 		Root<ArticleEntity> c = cquery.from(ArticleEntity.class);
 
@@ -194,7 +184,6 @@ public class NewsBean implements NewsBeanRemote {
 			cquery.where(where);
 			countQuery.where(where);
 		}
-
 
 		cquery.orderBy(criteriaBuilder.desc(c.get("date")));
 		Query query = entityMan.createQuery(cquery);
@@ -218,12 +207,31 @@ public class NewsBean implements NewsBeanRemote {
 		return plist;
 	}
 
+	@Override
+	public List<Author> getAuthors() {
+		List<Author> authors = new LinkedList<>();
+		Query query = entityMan.createQuery("SELECT a FROM AuthorEntity a ORDER BY a.name ASC");
+		List<AuthorEntity> authorEntityList = query.getResultList();
+		if(authorEntityList==null || authorEntityList.isEmpty()) return null;
+		for(AuthorEntity a : authorEntityList){
+			authors.add(new Author(a.getId(), a.getName()));
+		}
+		return authors;
+	}
+
+	@Override
+	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int page, int perPage) {
+		return null;
+	}
+
+	@TransactionAttribute(value=TransactionAttributeType.MANDATORY )
 	private TopicEntity retrieveTopic (String topic) {
 		String query = "SELECT t FROM TopicEntity t WHERE t.name = :topic";
 		try {return (TopicEntity) entityMan.createQuery(query).setParameter("topic", topic).getSingleResult();
 		} catch (NoResultException e ) { return null; }
 	}
 
+	@TransactionAttribute(value=TransactionAttributeType.MANDATORY )
 	private AuthorEntity retrieveAuthor (String author) {
 		String query = "SELECT a FROM AuthorEntity a WHERE a.name = :author";
 		try {return (AuthorEntity) entityMan.createQuery(query).setParameter("author", author).getSingleResult();

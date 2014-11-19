@@ -1,10 +1,12 @@
 package ejbInterface;
 
 import bean.Article;
+import bean.Author;
 import bean.Topic;
 
 import javax.ejb.Remote;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +19,10 @@ public interface NewsBeanRemote {
 	public List<Topic> getTopics();
 	public void addArticle(Article article);
 	public PaginatedList getArticlesPage(int topicId, int page, int perPage);
+
+	public List<Author> getAuthors();
+
+	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int page, int perPage);
 
 	class PaginatedList implements Serializable{
 		private long total;

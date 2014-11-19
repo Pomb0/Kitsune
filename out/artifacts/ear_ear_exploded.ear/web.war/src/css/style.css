@@ -7,6 +7,8 @@ body{
 	font-family:'Open Sans', sans-serif;
 	color:#DDD;
 	text-align:center;
+	margin:0;
+	padding:0;
 }
 
 .verticaltop{vertical-align:top;}
@@ -165,6 +167,7 @@ div.nav ul li a:active{
 #news{
 	display:inline-block;
 	width:60em;
+	margin:0;
 	max-width:95%;
 }
 
@@ -174,6 +177,7 @@ div.nav ul li a:active{
 	list-style:none;
 	padding-bottom:2em;
 }
+
 
 .articleIcon{
 	cursor:pointer;
@@ -191,6 +195,11 @@ div.nav ul li a:active{
 	min-height:7em;
 	background:rgba(0,0,0,0.2);
 }
+
+.userIcon{
+	min-height:1em;
+}
+
 
 .articleIcon:hover{
 	background:rgba(0,0,0,0.5);
@@ -336,7 +345,7 @@ div.nav ul li a:active{
 	position:fixed;
 	width:216px;
 	height:100%;
-	right:-239px;
+	left:-239px;
 	top:0px;
 	background:#333;
 	padding-top:24px;
@@ -346,12 +355,12 @@ div.nav ul li a:active{
 
 	color:#EEE;
 
-	border-left:8px solid #111;
+	border-right:8px solid #111;
 
-	-o-transition:right .5s;
-	-ms-transition:right .5s;
-	-moz-transition:right .5s;
-	-webkit-transition:right .5s;
+	-o-transition:left .5s;
+	-ms-transition:left .5s;
+	-moz-transition:left .5s;
+	-webkit-transition:left .5s;
 
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -362,7 +371,7 @@ div.nav ul li a:active{
 }
 
 #menu:hover #sidebar, #sidebar:hover{
-	right:0px;
+	left:0px;
 }
 
 .center{
@@ -389,6 +398,7 @@ div.nav ul li a:active{
 	padding-top:24px;
 	text-align:right;
 	vertical-align:top;
+	position:absolute;
 
 }
 

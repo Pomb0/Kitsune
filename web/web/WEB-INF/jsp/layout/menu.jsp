@@ -16,12 +16,12 @@
       <p class="thin">Read the foxing news.</p>
       <h2>${user.username}</h2>
       <ul class="button_list">
-        <a href="home"><li>Home</li></a>
+        <a href="home"><li>News</li></a>
+        <a href="author"><li>Authors</li></a>
         <a href="profile?id=${user.id}"><li>Profile</li></a>
         <c:if test="${user.admin}">
         <a href="users"><li>Users</li></a>
         </c:if>
-        <a href=""><li>Search</li></a>
         <a href="logout"><li>SignOut</li></a>
       </ul>
     </div>

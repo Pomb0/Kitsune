@@ -66,6 +66,12 @@ public class UserBean implements UserBeanRemote {
 	}
 
 	@Override
+	public void removeUser(int id){
+		UserEntity user = entityMan.find(UserEntity.class, id);
+		if(user!=null) entityMan.remove(user);
+	}
+
+	@Override
 	public Response updateUser(User user) {
 		try {
 			UserEntity userEntity = entityMan.find(UserEntity.class, user.getId());
@@ -98,6 +104,7 @@ public class UserBean implements UserBeanRemote {
 			list.add(new User()
 				.setId(u.getId())
 				.setUsername(u.getUsername())
+				.setMail(u.getMail())
 			);
 		}
 

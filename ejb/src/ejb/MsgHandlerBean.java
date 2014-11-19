@@ -37,17 +37,17 @@ public class MsgHandlerBean implements MessageListener {
 
 	@Override
 	public void onMessage(Message message) {
+		System.out.println(">>Got new XML with news.");
 		List<Article> articles;
 		parser = new XmlParser();
 		StreamMessage msg = (StreamMessage)message;
 		try {
 			String xml = msg.readString();
 			articles = parser.parse(xml);
-
-			for(Article pickl : articles){
-				news.addArticle(pickl);
+			for(Article article : articles) {
+				news.addArticle(article);
 			}
-
+			System.out.println(">>Finished adding articles to database.");
 		} catch (JMSException e) {
 			System.out.println("#>Error reading JMS message.");
 		}

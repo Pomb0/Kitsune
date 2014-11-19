@@ -18,6 +18,7 @@ public interface UserBeanRemote {
 	public User getUser(int id);
 	public Response updateUser(User user);
 	public List<User> getUserList();
+	public void removeUser(int id);
 
 	public enum Response{
 		OK(1), DUPLICATE_USER(2), DUPLICATE_MAIL(3), UNKNOWN(4);
