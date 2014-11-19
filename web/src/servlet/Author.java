@@ -31,6 +31,20 @@ public class Author extends KitsuneServlet{
 			response.sendRedirect("login");
 			return;
 		}
+		String tmp;
+		int authorId;
+		tmp = request.getParameter("id");
+
+		if(tmp!=null){
+			try {
+				authorId = Integer.parseInt(tmp);
+				response.sendRedirect("home?authorId=" + authorId);
+				return;
+			}catch (NumberFormatException e){
+				authorId = -1;
+			}
+		}
+
 
 		request.setAttribute("authorList", newsBean.getAuthors());
 

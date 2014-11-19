@@ -23,6 +23,5 @@
     <orderEntry type="library" scope="PROVIDED" name="JBoss 8.1.0.Final" level="application_server_libraries" />
     <orderEntry type="library" name="JPA 2.1-2.1" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
-    <orderEntry type="library" name="jboss-client" level="project" />
   </component>
 </module>

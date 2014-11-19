@@ -19,6 +19,7 @@ public class AuthorEntity implements Serializable{
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
+	@OrderBy("id ASC")
 	private Set<ArticleEntity> articles;
 
 	public int getId() {

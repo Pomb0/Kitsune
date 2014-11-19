@@ -165,49 +165,6 @@ public class NewsBean implements NewsBeanRemote {
 	}
 
 	@Override
-	public PaginatedList getArticlesPage(int topicId, int pageNumber, int pageSize) {
-		PaginatedList plist = new PaginatedList();
-		List<Article> list = new LinkedList<>();
-		CriteriaBuilder criteriaBuilder = entityMan.getCriteriaBuilder();
-
-		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-		CriteriaQuery<ArticleEntity> cquery = criteriaBuilder.createQuery(ArticleEntity.class);
-
-		Root<ArticleEntity> c = cquery.from(ArticleEntity.class);
-
-		ParameterExpression<Integer> critId = criteriaBuilder.parameter(Integer.class);
-		Expression where = criteriaBuilder.equal(c.get("topic").get("id"), critId);
-
-		countQuery.select(criteriaBuilder.count(countQuery.from(ArticleEntity.class)));
-
-		if(topicId!=-1){
-			cquery.where(where);
-			countQuery.where(where);
-		}
-
-		cquery.orderBy(criteriaBuilder.desc(c.get("date")));
-		Query query = entityMan.createQuery(cquery);
-		Query countQ = entityMan.createQuery(countQuery);
-
-		if(topicId!=-1){
-			query.setParameter(critId, topicId);
-			countQ.setParameter(critId, topicId);
-		}
-		query.setFirstResult((pageNumber - 1) * pageSize);
-		query.setMaxResults(pageSize);
-
-		Long total = (Long) countQ.getSingleResult();
-		List <ArticleEntity> articleEntities = (List <ArticleEntity>)query.getResultList();
-
-		for(ArticleEntity articleEntity : articleEntities) list.add(articleEntityToBean(articleEntity));
-
-		plist
-				.setPage(list)
-				.setTotal(total);
-		return plist;
-	}
-
-	@Override
 	public List<Author> getAuthors() {
 		List<Author> authors = new LinkedList<>();
 		Query query = entityMan.createQuery("SELECT a FROM AuthorEntity a ORDER BY a.name ASC");
@@ -220,8 +177,76 @@ public class NewsBean implements NewsBeanRemote {
 	}
 
 	@Override
-	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int page, int perPage) {
-		return null;
+	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int pageNumber, int pageSize) {
+		//Create list of results and paginatedList wrapper
+		PaginatedList plist = new PaginatedList();
+		List<Article> list = new LinkedList<>();
+
+		//Create CriteriaBuilder
+		CriteriaBuilder criteriaBuilder = entityMan.getCriteriaBuilder();
+
+		//Create Query To Count Results
+		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+		countQuery.select(criteriaBuilder.count(countQuery.from(ArticleEntity.class)));
+
+		//Create Query to get Articles
+		CriteriaQuery<ArticleEntity> cquery = criteriaBuilder.createQuery(ArticleEntity.class);
+
+		//Define root to get ArticleEntities
+		Root<ArticleEntity> c = cquery.from(ArticleEntity.class);
+
+		//Create Possible Parameters
+		ParameterExpression<Integer> topicParam = criteriaBuilder.parameter(Integer.class);
+		ParameterExpression<Integer> authorParam = criteriaBuilder.parameter(Integer.class);
+		ParameterExpression<Date> dateParam = criteriaBuilder.parameter(Date.class);
+		ParameterExpression<String> queryParam = criteriaBuilder.parameter(String.class);
+
+
+		Expression where = null;
+		List<Predicate> predicates = new LinkedList<>();
+
+		if(topicId!=null && topicId != -1) predicates.add(criteriaBuilder.equal(c.get("topic").get("id"), topicParam));
+		if(authorId!=null && authorId != -1) {
+			predicates.add(criteriaBuilder.isMember( new AuthorEntity(), c.get("authors") ));
+		}
+
+		where = criteriaBuilder.and(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+
+		//Set Where
+	   	if(where!=null){
+		    countQuery.where(where);
+		    cquery.where(where);
+	    }
+
+		cquery.orderBy(criteriaBuilder.desc(c.get("date")));
+		Query query = entityMan.createQuery(cquery);
+		Query countQ = entityMan.createQuery(countQuery);
+
+		//Set TopicId
+		if(topicId!=null && topicId != -1){
+			query.setParameter(topicParam, topicId);
+			countQ.setParameter(topicParam, topicId);
+		}
+
+		//Set AuthorId
+		if(authorId!=null && authorId != -1){
+			query.setParameter(authorParam, authorId);
+			countQ.setParameter(authorParam, authorId);
+		}
+
+
+		query.setFirstResult((pageNumber - 1) * pageSize);
+		query.setMaxResults(pageSize);
+
+		Long total = (Long) countQ.getSingleResult();
+		List <ArticleEntity> articleEntities = (List <ArticleEntity>)query.getResultList();
+
+		for(ArticleEntity articleEntity : articleEntities) list.add(articleEntityToBean(articleEntity));
+
+		plist
+				.setPage(list)
+				.setTotal(total);
+		return plist;
 	}
 
 	@TransactionAttribute(value=TransactionAttributeType.MANDATORY )

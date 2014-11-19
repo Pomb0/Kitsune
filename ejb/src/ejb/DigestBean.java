@@ -47,7 +47,7 @@ public class DigestBean {
 		digest.append("<h1>Digest: ").append(dateFormat.format(new Date())).append("</h1>");
 		digest.append("<ul>");
 
-		NewsBeanRemote.PaginatedList page = newsBean.getArticlesPage(-1, 1, articleCount);
+		NewsBeanRemote.PaginatedList page = newsBean.getSearchPage(null, null, null, null, 1, 12);
 		List<Article> list = (List<Article>)page.getPage();
 
 		for(Article a : list){

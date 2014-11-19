@@ -10,8 +10,6 @@
         <element id="artifact" artifact-name="web:war exploded" />
       </element>
       <element id="directory" name="lib">
-        <element id="library" level="project" name="JPA 2.1-2.1" />
-        <element id="library" level="project" name="hibernate" />
         <element id="library" level="project" name="javax.servlet.jsp.jstl-api-1.2.1" />
       </element>
     </root>

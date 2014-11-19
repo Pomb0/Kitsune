@@ -18,6 +18,7 @@ public class TopicEntity implements Serializable{
 	private String name;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
+	@OrderBy("id ASC")
 	private Set<ArticleEntity> articles;
 
 	public int getId() {

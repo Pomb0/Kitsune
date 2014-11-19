@@ -21,15 +21,18 @@ public class ArticleEntity implements Serializable {
 	private TopicEntity topic;
 
 	@ManyToMany(fetch = FetchType.LAZY)
+	@OrderBy("id ASC")
 	private Set<AuthorEntity> authors;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	@OrderBy("id ASC")
 	private Set<HighlightEntity> highlights;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	@OrderBy("id ASC")
 	private Set<MediaEntity> media;
 
 	@Column(columnDefinition = "text")

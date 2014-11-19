@@ -18,11 +18,10 @@ public interface NewsBeanRemote {
 	public Article getArticle(int id);
 	public List<Topic> getTopics();
 	public void addArticle(Article article);
-	public PaginatedList getArticlesPage(int topicId, int page, int perPage);
 
 	public List<Author> getAuthors();
 
-	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int page, int perPage);
+	public PaginatedList getSearchPage(Integer topicId, Integer authorId, Date dateLimit, String textSearch, int pageNumber, int pageSize);
 
 	class PaginatedList implements Serializable{
 		private long total;
