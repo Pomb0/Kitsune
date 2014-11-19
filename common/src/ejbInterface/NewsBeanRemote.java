@@ -26,6 +26,7 @@ public interface NewsBeanRemote {
 	class PaginatedList implements Serializable{
 		private long total;
 		private List page;
+		private QueryType type;
 
 		public PaginatedList() {
 		}
@@ -43,6 +44,10 @@ public interface NewsBeanRemote {
 			return total;
 		}
 
+		public QueryType getType() {
+			return type;
+		}
+
 		public PaginatedList setTotal(final long total) {
 			this.total = total;
 			return this;
@@ -53,6 +58,21 @@ public interface NewsBeanRemote {
 			return this;
 		}
 
+		public PaginatedList setType(final QueryType type) {
+			this.type = type;
+			return this;
+		}
+
+		public enum QueryType{
+			NORMAL(1), TOPIC(2), AUTHOR(3), DATE(4), TEXT_SEARCH(5);
+			private int value;
+			private QueryType(int value) {
+				this.value = value;
+			}
+			public int getValue(){
+				return value;
+			}
+		}
 
 	}
 }

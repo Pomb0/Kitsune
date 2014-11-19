@@ -18,7 +18,19 @@
     </c:forEach>
   </ul>
 </div>
+<div id="search">
+  <form name="search" method="get" action="" class="inline">
+    <input class="stxt" type="text" name="query" required="required" placeholder="Search Highlights" value="${query}" />
+    <input class="sbtn" type="submit" name="submit" value="Search" />
+  </form>
 
+  <form name="search" method="get" action="" class="inline">
+    <input class="stxt" type="datetime" name="dateTime" required="required" placeholder="yyyy-MM-dd HH:mm" value="${dateTime}"/>
+    <input class="sbtn" type="submit" name="submit" value="After" />
+  </form>
+
+
+</div>
 <div id="news">
   <ul>
     <c:forEach items="${articles}" var="item">
@@ -39,8 +51,8 @@
 </div>
 <div class="nav">
   <ul>
-<c:if test="${prevPage != 0}"><li><a href="?topic=${topic}&page=${prevPage}">Previous</a></li></c:if>
-<c:if test="${nextPage != 0}"><li><a href="?topic=${topic}&page=${nextPage}">Next</a></li></c:if>
+<c:if test="${prevPage != 0}"><li><a href="?${params}&page=${prevPage}">Previous</a></li></c:if>
+<c:if test="${nextPage != 0}"><li><a href="?${params}&page=${nextPage}">Next</a></li></c:if>
   </ul>
 </div>
 

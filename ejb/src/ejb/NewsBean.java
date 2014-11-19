@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.*;
 import java.util.*;
 
 /**
@@ -181,71 +180,61 @@ public class NewsBean implements NewsBeanRemote {
 		//Create list of results and paginatedList wrapper
 		PaginatedList plist = new PaginatedList();
 		List<Article> list = new LinkedList<>();
+		List<ArticleEntity> entityList = null;
+		Long count = null;
+		Query query = null;
+		Query cquery = null;
 
-		//Create CriteriaBuilder
-		CriteriaBuilder criteriaBuilder = entityMan.getCriteriaBuilder();
+		if(topicId!=null){
+			plist.setType(PaginatedList.QueryType.TOPIC);
+			query = entityMan.createQuery("SELECT a FROM ArticleEntity a WHERE a.topic.id = :topicId ORDER BY a.date DESC");
+			cquery = entityMan.createQuery("SELECT COUNT(a.id) FROM ArticleEntity a WHERE a.topic.id = :topicId");
+			query.setParameter("topicId", topicId);
+			cquery.setParameter("topicId", topicId);
+		}else
+		if(authorId!=null) {
+			plist.setType(PaginatedList.QueryType.AUTHOR);
+			query = entityMan.createQuery("SELECT DISTINCT a from ArticleEntity a JOIN a.authors t where t.id = :id ORDER BY a.date DESC");
+			cquery = entityMan.createQuery("SELECT COUNT( DISTINCT a ) from ArticleEntity a JOIN a.authors t where t.id = :id");
+			query.setParameter("id", authorId);
+			cquery.setParameter("id", authorId);
+		}else
+		if(dateLimit!=null){
+			plist.setType(PaginatedList.QueryType.DATE);
+			query = entityMan.createQuery("SELECT a from ArticleEntity a WHERE a.date > :text ORDER BY a.date");
+			cquery = entityMan.createQuery("SELECT COUNT(a) from ArticleEntity a WHERE a.date > :text");
+			query.setParameter("text", dateLimit);
+			cquery.setParameter("text", dateLimit);
 
-		//Create Query To Count Results
-		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-		countQuery.select(criteriaBuilder.count(countQuery.from(ArticleEntity.class)));
+		}else
+		if(textSearch!=null){
+			textSearch = textSearch.replace("%", "").replace(" ", "").trim();
+			plist.setType(PaginatedList.QueryType.TEXT_SEARCH);
+			query = entityMan.createQuery("SELECT DISTINCT a from ArticleEntity a JOIN a.highlights h WHERE h.text LIKE :query ORDER BY a.date DESC, a.topic.name DESC");
+			cquery = entityMan.createQuery("SELECT COUNT( DISTINCT a ) from ArticleEntity a JOIN a.highlights h WHERE h.text LIKE :query");
+			query.setParameter("query", "%" + textSearch + "%");
+			cquery.setParameter("query", "%" + textSearch + "%");
 
-		//Create Query to get Articles
-		CriteriaQuery<ArticleEntity> cquery = criteriaBuilder.createQuery(ArticleEntity.class);
-
-		//Define root to get ArticleEntities
-		Root<ArticleEntity> c = cquery.from(ArticleEntity.class);
-
-		//Create Possible Parameters
-		ParameterExpression<Integer> topicParam = criteriaBuilder.parameter(Integer.class);
-		ParameterExpression<Integer> authorParam = criteriaBuilder.parameter(Integer.class);
-		ParameterExpression<Date> dateParam = criteriaBuilder.parameter(Date.class);
-		ParameterExpression<String> queryParam = criteriaBuilder.parameter(String.class);
-
-
-		Expression where = null;
-		List<Predicate> predicates = new LinkedList<>();
-
-		if(topicId!=null && topicId != -1) predicates.add(criteriaBuilder.equal(c.get("topic").get("id"), topicParam));
-		if(authorId!=null && authorId != -1) {
-			predicates.add(criteriaBuilder.isMember( new AuthorEntity(), c.get("authors") ));
-		}
-
-		where = criteriaBuilder.and(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
-
-		//Set Where
-	   	if(where!=null){
-		    countQuery.where(where);
-		    cquery.where(where);
-	    }
-
-		cquery.orderBy(criteriaBuilder.desc(c.get("date")));
-		Query query = entityMan.createQuery(cquery);
-		Query countQ = entityMan.createQuery(countQuery);
-
-		//Set TopicId
-		if(topicId!=null && topicId != -1){
-			query.setParameter(topicParam, topicId);
-			countQ.setParameter(topicParam, topicId);
-		}
-
-		//Set AuthorId
-		if(authorId!=null && authorId != -1){
-			query.setParameter(authorParam, authorId);
-			countQ.setParameter(authorParam, authorId);
+		}else{
+			plist.setType(PaginatedList.QueryType.NORMAL);
+			query = entityMan.createQuery("SELECT a FROM ArticleEntity a ORDER BY a.date DESC");
+			cquery = entityMan.createQuery("SELECT COUNT(a.id) FROM ArticleEntity a");
 		}
 
 
-		query.setFirstResult((pageNumber - 1) * pageSize);
-		query.setMaxResults(pageSize);
+		if(query!=null && cquery!=null){
+			query.setMaxResults(pageSize);
+			query.setFirstResult( (pageNumber-1) * pageSize );
+			entityList = query.getResultList();
+			count = (Long) cquery.getSingleResult();
+		}
 
-		Long total = (Long) countQ.getSingleResult();
-		List <ArticleEntity> articleEntities = (List <ArticleEntity>)query.getResultList();
-
-		for(ArticleEntity articleEntity : articleEntities) list.add(articleEntityToBean(articleEntity));
+		if(entityList!=null) for(ArticleEntity a : entityList) list.add(articleEntityToBean(a));
 
 		plist
 				.setPage(list)
-				.setTotal(total);
+				.setTotal( (count!=null)?count:0 );
+
 		return plist;
 	}
 

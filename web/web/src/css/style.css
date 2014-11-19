@@ -328,6 +328,48 @@ div.nav ul li a:active{
 
 
 
+.stxt{
+	cursor:default;
+	background:#1A1A1A;
+	padding:0.25em;
+	border-radius:0.5em;
+	-moz-border-radius:0.5em;
+	border:0.15em solid #080808;
+	color:#555;
+	text-shadow:none;
+	-o-transition:color .25s, text-shadow .25s;
+	-ms-transition:color .25s, text-shadow .25s;
+	-moz-transition:color .25s, text-shadow .25s;
+	-webkit-transition:color .25s, text-shadow .25s;
+	transition:color .25s, text-shadow .25s;
+
+}
+
+.stxt:focus{
+	color:#F60;
+	text-shadow:1px 1px 1px #111;
+}
+
+.sbtn{
+	cursor:default;
+	background:#1A1A1A;
+	padding:0.25em;
+	border-radius:0.5em;
+	-moz-border-radius:0.5em;
+	border:0.15em solid #080808;
+	color:#555;
+	text-shadow:none;
+	-o-transition:color .25s, text-shadow .25s;
+	-ms-transition:color .25s, text-shadow .25s;
+	-moz-transition:color .25s, text-shadow .25s;
+	-webkit-transition:color .25s, text-shadow .25s;
+	transition:color .25s, text-shadow .25s;
+}
+
+.sbtn:hover{
+	color:#F60;
+	text-shadow:1px 1px 1px #111;
+}
 
 
 
